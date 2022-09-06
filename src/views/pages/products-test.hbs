@@ -1,0 +1,26 @@
+
+{{>navigation}}
+{{#if productList.[0]}}
+<div class="table-responsive my-3">
+  <table class="table table-light">
+    <thead>
+      <tr>
+        <th scope="col">Nombre</th>
+        <th scope="col">Precio</th>
+        <th scope="col">Imagen</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each productList}}
+        <tr>
+          <td>{{this.name}}</td>
+          <td>{{this.price}}</td>
+          <td><img src="{{this.image}}" alt="imagen"></td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  </div>
+{{else}}
+  <h2>No hay productos</h2>
+{{/if}}

@@ -1,0 +1,137 @@
+{
+  "id": "messages",
+  "messages": [
+    {
+      "id": 1,
+      "author": {
+        "id": "lupita@gmail.com",
+        "name": "Ana",
+        "last_name": "Gaitan",
+        "age": "30",
+        "alias": "Any",
+        "avatar": "url avatar del usuario"
+      },
+      "text": "hola, mi nombre es Ana"
+    },
+    {
+      "id": 2,
+      "author": {
+        "id": "maria23@gmail.com",
+        "name": "Maria",
+        "last_name": "Pinto",
+        "age": "35",
+        "alias": "March",
+        "avatar": "url avatar del usuario"
+      },
+      "text": "cómo estás?"
+    },
+    {
+      "id": 3,
+      "author": {
+        "id": "pedro27@gmail.com",
+        "name": "Pedro",
+        "last_name": "Garcia",
+        "age": "25",
+        "alias": "Peter",
+        "avatar": "url avatar del usuario"
+      },
+      "text": "Hola, bien gracias"
+    },
+    {
+      "id": 4,
+      "author": {
+        "id": "juanito@hotmail.com",
+        "name": "Juan",
+        "last_name": "Gaviria",
+        "age": "33",
+        "alias": "Juanes",
+        "avatar": "url avatar del usuario"
+      },
+      "text": "Hola ya entre al chat"
+    },
+    {
+      "id": 5,
+      "author": {
+        "id": "fabiopit@gmail.com",
+        "name": "Fabio",
+        "last_name": "Gomez",
+        "age": "35",
+        "alias": "Fabi",
+        "avatar": "url avatar del usuario"
+      },
+      "text": "Cuanto vale la pizza"
+    },
+    {
+      "id": 6,
+      "author": {
+        "id": "shalomnes@hotmail.com",
+        "name": "Shalom",
+        "last_name": "Mendez",
+        "age": "37",
+        "alias": "Shu",
+        "avatar": "url avatar del usuario"
+      },
+      "text": "La pizza vale 40000"
+    },
+    {
+      "id": 7,
+      "author": {
+        "id": "pitufina2000@hotmail.com",
+        "name": "Margarita",
+        "last_name": "Martinez",
+        "age": "30",
+        "alias": "Margara",
+        "avatar": "url avatar del usuario"
+      },
+      "text": "La pizza alcanzara para todos?"
+    },
+    {
+      "id": 8,
+      "author": {
+        "id": "caballitodemar@hotmail.com",
+        "name": "Carlos",
+        "last_name": "Mora",
+        "age": "38",
+        "alias": "Charlie",
+        "avatar": "url avatar del usuario"
+      },
+      "text": "Hola llegue tarde"
+    },
+    {
+      "id": 9,
+      "author": {
+        "id": "jorgeranch@gmail.com",
+        "name": "Jorge",
+        "last_name": "Cadena",
+        "age": "28",
+        "alias": "George",
+        "avatar": "url avatar del usuario"
+      },
+      "text": "Tranquilo estamos cuadrando el plan"
+    },
+    {
+      "id": 10,
+      "author": {
+        "id": "vitaminista@hotmail.com",
+        "name": "Viviana",
+        "last_name": "Rodriguez",
+        "age": "34",
+        "alias": "Vivi",
+        "avatar": "url avatar del usuario"
+      },
+      "text": "Ya compraron la bebida?"
+    },
+    {
+      "id": 11,
+      "author": {
+        "id": "administ1@gmail.com",
+        "name": "Adriana",
+        "last_name": "Silva",
+        "age": "29",
+        "alias": "Adri",
+        "avatar": "url avatar del usuario"
+      },
+      "text": "Si ya tenemos todo listo"
+    }
+  ]
+}

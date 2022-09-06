@@ -1,0 +1,278 @@
+<article>
+  {{!-- <form action="name"></form> --}}
+  {{>navigation}}
+  <h1>Agregar Nuevo Producto</h1>
+  <style>
+    * { font-family: "Lobster", cursive; }
+  </style>
+  <form>
+    <label for="title">Título:</label>
+    <input type="text" id="title-input" placeholder="Título" name="title" class="mx-2" />
+    <label for="price">Precio:</label>
+    <input type="number" id="price-input" placeholder="Precio" name="price" class="mx-2" />
+    <label for="thumbnail">Imagen: </label>
+    <input type="text" id="thumbnail-input" placeholder="Imagen" name="thumbnail" class="mx-2" />
+    <button id="add-product-button" class="btn btn-secondary">Agregar Producto</button>
+  </form>
+</article>
+
+<article>
+  <hr />
+
+  <h2>Mensajes con otros usuarios</h2>
+
+  <form class="messages-form">
+    <section class="input-container">
+      <label for="email">Email:</label>
+      <input type="text" id="email-input" placeholder="Ingrese su email" name="email" class="mx-2"/>
+      <span id="required-email" class="required">El email es requerido</span>
+    </section>
+
+    <section class="input-container">
+      <label for="name">Nombre:</label>
+      <input type="text" id="name-input" placeholder="Ingrese su nombre" name="nombre" class="mx-2"/>
+      <span id="required-name" class="required">El nombre es requerido</span>
+    </section>
+
+    <section class="input-container">
+      <label for="last_name">Apellido:</label>
+      <input type="text" id="last_name-input" placeholder="Ingrese su apellido" name="last_name" class="mx-2"/>
+      <span id="required-last_name" class="required">El apellido es requerido</span>
+    </section>
+
+    <section class="input-container">
+      <label for="age">Edad:</label>
+      <input type="number" id="age-input" placeholder="Ingrese su edad" name="age" class="mx-2"/>
+      <span id="required-age" class="required">La edad es requerida</span>
+    </section>
+
+    <section class="input-container">
+      <label for="alias">Alias:</label>
+      <input type="text" id="alias-input" placeholder="Ingrese su alias" name="alias" class="mx-2"/>
+      <span id="required-alias" class="required">El alias es requerido</span>
+    </section>
+
+    <section class="input-container">
+      <label for="avatar">Avatar:</label>
+      <input type="text" id="avatar-input" placeholder="Ingrese su avatar" name="avatar" class="mx-2"/>
+      <span id="required-avatar" class="required">El avatar es requerido</span>
+    </section>
+
+    <section class="input-container">
+      <label for="message">Mensaje:</label>
+      <input
+        type="text"
+        id="message-input"
+        placeholder="Ingrese su mensaje"
+        name="message"
+        class="mx-2"
+      />
+      <span style="visibility: hidden;">Requerido</span>
+    </section>
+
+    <section class="input-container">
+      <button id="send-messages-button" class="btn btn-primary">Enviar</button>
+    </section>
+  </form>
+  <section id="messages-log"></section>
+</article>
+
+<article>
+  <hr />
+  <h2>Productos</h2>
+  <div class="table-responsive">
+    <table class="table table-light">
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Título</th>
+          <th scope="col">Precio</th>
+          <th scope="col">Imagen</th>
+        </tr>
+      </thead>
+      <tbody id="product-table-content"></tbody></table></div>
+</article>
+
+<script>
+  const socket = io();
+  const inputTitle = document.getElementById("title-input");
+  const inputPrice = document.getElementById("price-input");
+  const inputThumbnail = document.getElementById("thumbnail-input");
+  const btnAddProduct = document.getElementById("add-product-button");
+  const btnSendMessages = document.getElementById("send-messages-button");
+
+  btnSendMessages.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    const email = document.getElementById("email-input");
+    const message = document.getElementById("message-input");
+    const name = document.getElementById("name-input");
+    const lastName = document.getElementById("last_name-input");
+    const age = document.getElementById("age-input")
+    const alias = document.getElementById("alias-input")
+    const avatar = document.getElementById("avatar-input")
+
+    const requiredEmail = document.getElementById("required-email");
+    const requiredMessage = document.getElementById("required-message");
+    const requiredName = document.getElementById("required-name");
+    const requiredLastName = document.getElementById("required-last_name");
+    const requiredAge = document.getElementById("required-age")
+    const requiredAlias = document.getElementById("required-alias")
+    const requiredAvatar = document.getElementById("required-avatar")
+
+    if (email.value === '') {
+      requiredEmail.style.visibility = 'visible';
+      return;
+    }
+    
+    if (message.value === '') {
+      requiredMessage.style.visibility = 'visible';
+      return;
+    }
+    
+    if (name.value === '') {
+      requiredName.style.visibility = 'visible';
+      return;
+    }
+    
+    if (lastName.value === '') {
+      requiredLastName.style.visibility = 'visible';
+      return;
+    }
+    
+    if (age.value === '') {
+      requiredAge.style.visibility = 'visible';
+      return;
+    }
+    
+    if (alias.value === '') {
+      requiredAlias.style.visibility = 'visible';
+      return;
+    }
+    
+    if (avatar.value === '') {
+      requiredAvatar.style.visibility = 'visible';
+      return;
+    }
+
+    if (email.value !== '' && message.value !== '' && name.value !== '' && lastName.value !== ''&& age.value !== '' && alias.value !== '' && avatar.value !== ''){
+      requiredEmail.style.visibility = 'hidden';
+      socket.emit("newMessage", {
+        author: {
+          email: email.value,
+          date: new Date().toLocaleString(),
+          name: name.value,
+          last_name: lastName.value,
+          age: age.value,
+          alias: alias.value,
+          avatar: avatar.value,
+        },
+        message: message.value, 
+      });
+
+      email.value = '';
+      message.value = '';
+      name.value = '';
+      lastName.value = '';
+      age.value = '';
+      alias.value = '';
+      avatar.value = '';
+    }
+  });
+
+  btnAddProduct.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    const title = inputTitle.value;
+    const price = inputPrice.value;
+    const thumbnail = inputThumbnail.value;
+
+    if(title !== '' && price !== '' && thumbnail !== ''){
+      socket.emit("addNewProduct", {
+        title,
+        price,
+        thumbnail
+      });
+
+      inputTitle.value = '';
+      inputPrice.value = '';
+      inputThumbnail.value = '';
+    }
+  });
+
+  socket.on("startedProductList", (data) => {
+    console.log("startedProductList", data);
+    const productTableContent = document.getElementById("product-table-content");
+
+    productTableContent.innerHTML = '';
+
+    if (data.length <= 0) {
+      productTableContent.innerText = 'No hay productos'
+    }
+
+    for (let product of data) {
+      const tr = document.createElement('tr');
+      
+      tr.innerHTML = `
+        <td>${product.id}</td>
+        <td>${product.title}</td>
+        <td>${product.price}</td>
+        <td><img src="${product.thumbnail}" alt="imagen" style="width:50px"></td>`;
+
+      productTableContent.appendChild(tr);
+    }
+  });
+
+  socket.on("startedMessagesList", (data) => {
+    console.log("startedMessagesList", data);
+
+    const messagesLog = document.getElementById("messages-log");
+
+    messagesLog.innerHTML = '';
+
+    for (let message of data) {
+      const p = document.createElement('p');
+      p.innerHTML = `
+        <strong style="color:blue">${message.email}</strong> <span style="color:#6c3b2a">[${message.date}]</span> : <em style="color:green">${message.message}</em>
+      `;
+
+      messagesLog.appendChild(p);
+    }
+  });
+
+  socket.on("updateMessages", (data) => {
+    
+    console.log("updateMessages", data);
+
+    const messagesLog = document.getElementById("messages-log");
+    messagesLog.innerHTML = '';
+
+    for (let message of data) {
+      const p = document.createElement('p');
+      p.innerHTML = `
+        <strong style="color:blue">${message.email}</strong> <span style="color:#6c3b2a">[${message.date}]</span> : <em style="color:green">${message.message}</em>
+      `;
+
+      messagesLog.appendChild(p);
+    }
+  });
+
+  socket.on("updateProducts", (data) => {
+    console.log("updateProducts", data);
+    const productTableContent = document.getElementById("product-table-content");
+
+    productTableContent.innerHTML = '';
+
+    for (let product of data) {
+      const tr = document.createElement('tr');
+      
+      tr.innerHTML = `
+        <td>${product.id}</td>
+        <td>${product.title}</td>
+        <td>${product.price}</td>
+        <td><img src="${product.thumbnail}" alt="imagen"></td>`;
+
+      productTableContent.appendChild(tr);
+    }
+  });
+</script>
