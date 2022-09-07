@@ -15,6 +15,8 @@ import mongoose from "mongoose";
 import userService from "./models/Users.js";
 import sessionService from "./models/Session.js";
 import { createHash, isValidPassword } from "./utils.js";
+import passport from "passport";
+import initializePassport from "./config/passport.config.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -44,6 +46,10 @@ app.use(
     saveUninitialized: false,
   })
 );
+
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(express.static(__dirname + "/public"));
 app.set("views", __dirname + "/views");
@@ -130,11 +136,6 @@ app.get("/products-test", async (req, res) => {
   res.render("pages/products-test", { productList });
 });
 
-app.get("/data", (req, res) => {
-  if (!req.session.user) return res.redirect("/login");
-  res.render("data", { user: req.session.user });
-});
-
 app.get("/register", (req, res) => {
   if (req.session.user) {
     return res.redirect("/");
@@ -143,34 +144,28 @@ app.get("/register", (req, res) => {
   res.render("pages/register");
 });
 
-app.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
+app.post(
+  "/register",
+  passport.authenticate("register", {
+    failureRedirect: "/api/sessions/registerfail",
+  }),
+  async (req, res) => {
+    req.user;
+    // const { name, email, password } = req.body;
 
-  if (!name || !email || !password) {
-    return res.status(400).send({ error: "Incomplete Values" });
+    // const users = await userService.find();
+
+    // const exists = users.find((u) => u.email === email);
+
+    // if (exists) {
+    //   return res.status(400).send({ error: "User already exists" });
+    // }
+    res.send({ status: "success", payload: req.user._id });
   }
+);
 
-  const users = await userService.find();
-
-  const exists = users.find((u) => u.email === email);
-
-  if (exists) {
-    return res.status(400).send({ error: "User already exists" });
-  }
-
-  const user = {
-    name,
-    email,
-    password: createHash(password),
-    role: "user",
-  };
-
-  try {
-    const result = await userService.create(user);
-    res.send({ status: "success", payload: result });
-  } catch (error) {
-    res.status(500).send({ error: error });
-  }
+app.get("/registerfail", async (req, res) => {
+  res.status(500).send({ status: "error", error: "Register failed" });
 });
 
 app.get("/login", (req, res) => {

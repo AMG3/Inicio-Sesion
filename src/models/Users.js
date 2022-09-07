@@ -11,6 +11,6 @@ const schema = mongoose.Schema(
   { timestamps: true }
 );
 
-const userService = mongoose.model(collection, schema);
+const userService = mongoose.models.Users || mongoose.model(collection, schema);
 
 export default userService;
