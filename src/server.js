@@ -176,46 +176,32 @@ app.get("/login", (req, res) => {
   res.render("pages/login");
 });
 
-app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).send({ error: "Incomplete values" });
-  }
-
-  try {
-    const user = await userService.findOne(
-      { $and: [{ email }, { password }] },
-      { email: 1, password: 1 }
-    );
-
-    console.log("user", user);
-
-    if (!user) {
-      return res.send({ data: "User not found" });
-    }
-
-    if (!isValidPassword(createHash(user.password), password)) {
-      return res
-        .status(400)
-        .send({ status: "error", error: "Incorrect password" });
-    }
-
-    req.session.user = user;
-
-    const session = {
-      email,
-      role: "user",
+app.post(
+  "/login",
+  passport.authenticate("login", {
+    failureRedirect: "/api/sessions/loginfail",
+  }),
+  async (req, res) => {
+    // const session = {
+    //   email,
+    //   role: "user",
+    // };
+    req.session.user = {
+      name: req.user.name,
+      email: req.user.email,
+      id: req.user._id,
     };
 
-    const sessionCreated = await sessionService.create(session);
+    res.send({ status: "success", payload: req.session.user });
+    // const sessionCreated = await sessionService.create(session);
 
-    res
-      .cookie("login", "ecommerce", { maxAge: 10000 })
-      .send({ status: "success", payload: sessionCreated });
-  } catch (error) {
-    res.status(500).send({ error: error });
+    // res.cookie("login", "ecommerce", { maxAge: 10000 });
   }
+);
+
+app.get("/loginfail", (req, res) => {
+  console.log("login failed");
+  res.send({ status: "error", error: "Login failed" });
 });
 
 app.get("/current", (req, res) => {

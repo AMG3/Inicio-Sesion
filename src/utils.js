@@ -5,8 +5,8 @@ import bcrypt from "bcrypt";
 export const createHash = (password) =>
   bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
-export const isValidPassword = (encPass, password) =>
-  bcrypt.compareSync(password, encPass);
+export const isValidPassword = (encryptedPassword, password) =>
+  bcrypt.compareSync(password, encryptedPassword);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

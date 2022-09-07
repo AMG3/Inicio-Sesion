@@ -39,7 +39,9 @@ const initializePassport = () => {
           if (!email || !password) return done(null, false);
           let user = await usersService.findOne({ email: email });
           if (!user) return done(null, false);
-          if (!isValidPassword(user, password)) return done(null, false);
+
+          if (!isValidPassword(user.password, password))
+            return done(null, false);
           return done(null, user);
         } catch (error) {
           console.log(error);
@@ -48,15 +50,13 @@ const initializePassport = () => {
       }
     )
   );
-  //   passport.use("login", new LocalStrategy());
+
+  passport.serializeUser((user, done) => {
+    done(null, user._id);
+  });
+  passport.deserializeUser(async (id, done) => {
+    let result = await usersService.findOne({ _id: id });
+    return done(null, result);
+  });
 };
-
-passport.serializeUser((user, done) => {
-  done(null, user._id);
-});
-passport.deserializeUser(async (id, done) => {
-  let result = await usersService.findOne({ _id: id });
-  return done(null, result);
-});
-
 export default initializePassport;
