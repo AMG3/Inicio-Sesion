@@ -8,7 +8,7 @@ function getUserName() {
       },
     })
       .then((res) => res.json())
-      .then((res) => (name.textContent = "Bienvenido " + res.name));
+      .then((res) => (name.textContent = "Bienvenido " + res.email));
   }
 }
 
