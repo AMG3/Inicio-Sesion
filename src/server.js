@@ -130,6 +130,11 @@ app.get("/products-test", async (req, res) => {
   res.render("pages/products-test", { productList });
 });
 
+app.get("/data", (req, res) => {
+  if (!req.session.user) return res.redirect("/login");
+  res.render("data", { user: req.session.user });
+});
+
 app.get("/register", (req, res) => {
   if (req.session.user) {
     return res.redirect("/");
@@ -186,16 +191,21 @@ app.post("/login", async (req, res) => {
   try {
     const user = await userService.findOne(
       { $and: [{ email }, { password }] },
-      { email: 1 }
+      { email: 1, password: 1 }
     );
 
+    console.log("user", user);
+
     if (!user) {
-      return res.status(400).send({ error: "User not found" });
+      return res.send({ data: "User not found" });
     }
-    if (isValidPassword(user, password))
+
+    if (!isValidPassword(createHash(user.password), password)) {
       return res
         .status(400)
         .send({ status: "error", error: "Incorrect password" });
+    }
+
     req.session.user = user;
 
     const session = {
@@ -203,11 +213,11 @@ app.post("/login", async (req, res) => {
       role: "user",
     };
 
-    await sessionService.create(session);
+    const sessionCreated = await sessionService.create(session);
 
     res
       .cookie("login", "ecommerce", { maxAge: 10000 })
-      .send({ status: "success", payload: user });
+      .send({ status: "success", payload: sessionCreated });
   } catch (error) {
     res.status(500).send({ error: error });
   }
