@@ -1,8 +1,10 @@
 const form = document.getElementById("loginForm");
 const registerBtn = document.getElementById("registerButton");
+const errorMessages = document.getElementById("error-messages");
 
 form.addEventListener("submit", (evt) => {
   evt.preventDefault();
+  errorMessages.innerText = "";
   let data = new FormData(form);
   let obj = {};
   data.forEach((value, key) => (obj[key] = value));
@@ -14,7 +16,11 @@ form.addEventListener("submit", (evt) => {
     },
   })
     .then((result) => result.json())
-    .then((json) => window.location.replace("/"));
+    .then((json) => window.location.replace("/"))
+    .catch((e) => {
+      errorMessages.setAttribute("style", "color:red;");
+      errorMessages.innerText = "Usuario o contraseña no válidos";
+    });
 });
 
 registerBtn.addEventListener("click", () => {

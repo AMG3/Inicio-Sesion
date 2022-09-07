@@ -26,9 +26,7 @@ const __dirname = dirname(__filename);
 const PORT = 8080;
 const products = new Container(knexMariaDB, "product");
 const chatMessages = new Container(knexSQlite, "message");
-const connection = mongoose.connect(
-  "mongodb+srv://test:poligamia12345@cluster0.fxygqmb.mongodb.net/?retryWrites=true&w=majority"
-);
+const connection = mongoose.connect(process.env.connection_string);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -36,8 +34,7 @@ app.use(cookieParser());
 app.use(
   session({
     store: MongoStore.create({
-      mongoUrl:
-        "mongodb+srv://test:poligamia12345@cluster0.fxygqmb.mongodb.net/?retryWrites=true&w=majority",
+      mongoUrl: process.env.connection_string,
       options: { useNewUrlParser: true, useUnifiedTopology: true },
       ttl: 3600,
     }),
@@ -151,15 +148,7 @@ app.post(
   }),
   async (req, res) => {
     req.user;
-    // const { name, email, password } = req.body;
 
-    // const users = await userService.find();
-
-    // const exists = users.find((u) => u.email === email);
-
-    // if (exists) {
-    //   return res.status(400).send({ error: "User already exists" });
-    // }
     res.send({ status: "success", payload: req.user._id });
   }
 );
@@ -182,10 +171,6 @@ app.post(
     failureRedirect: "/api/sessions/loginfail",
   }),
   async (req, res) => {
-    // const session = {
-    //   email,
-    //   role: "user",
-    // };
     req.session.user = {
       name: req.user.name,
       email: req.user.email,
@@ -193,9 +178,6 @@ app.post(
     };
 
     res.send({ status: "success", payload: req.session.user });
-    // const sessionCreated = await sessionService.create(session);
-
-    // res.cookie("login", "ecommerce", { maxAge: 10000 });
   }
 );
 

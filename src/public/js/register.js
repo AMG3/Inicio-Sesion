@@ -1,8 +1,10 @@
 const form = document.getElementById("registerForm");
 const loginBtn = document.getElementById("loginButton");
+const errorMessages = document.getElementById("error-messages");
 
 form.addEventListener("submit", (evt) => {
   evt.preventDefault();
+  errorMessages.innerText = "";
   let data = new FormData(form);
   let obj = {};
   data.forEach((value, key) => (obj[key] = value));
@@ -14,8 +16,11 @@ form.addEventListener("submit", (evt) => {
     },
   })
     .then((result) => result.json())
-    .then((json) => console.log(json))
-    .then(() => window.location.replace("/login"));
+    .then(() => window.location.replace("/login"))
+    .catch((e) => {
+      errorMessages.setAttribute("style", "color:red;");
+      errorMessages.innerText = "Usuario ya registrado";
+    });
 });
 
 loginBtn.addEventListener("click", () => {
