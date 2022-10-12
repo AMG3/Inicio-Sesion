@@ -7,7 +7,6 @@ import { engine } from "express-handlebars";
 import faker from "faker";
 import { Container } from "./Container.js";
 import { knexMariaDB, knexSQlite } from "./options/db.js";
-// import { normalizedObject } from "./normalizacion/normalize.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import MongoStore from "connect-mongo";
@@ -26,7 +25,7 @@ const __dirname = dirname(__filename);
 const PORT = 8080;
 const products = new Container(knexMariaDB, "product");
 const chatMessages = new Container(knexSQlite, "message");
-const connection = mongoose.connect(process.env.connection_string);
+const connection = mongoose.connect(process.env.MONGO_URI);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -34,7 +33,7 @@ app.use(cookieParser());
 app.use(
   session({
     store: MongoStore.create({
-      mongoUrl: process.env.connection_string,
+      mongoUrl: process.env.MONGO_URI,
       options: { useNewUrlParser: true, useUnifiedTopology: true },
       ttl: 3600,
     }),
